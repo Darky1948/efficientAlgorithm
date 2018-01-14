@@ -1,0 +1,16 @@
+R S P
+P B P
+P D N
+N B N
+N E X
+X S Y
+X S
+Y B Y
+Y 0
+Y 1
+S +
+S -
+B 0
+B 1
+D .
+E e
