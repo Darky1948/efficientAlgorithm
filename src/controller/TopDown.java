@@ -1,10 +1,17 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
 
 import model.Grammar;
 
+/**
+ * 
+ * @author Kristen VIGUIER
+ *
+ */
 public class TopDown {
 	
 	/**
@@ -23,6 +30,16 @@ public class TopDown {
 	private Boolean table[][][];
 	
 	/**
+	 * This is an attribute to count the number of iteration (for performance measurements).
+	 */
+	private int iterationTopDownMemoization;
+	
+	/**
+	 * This is an attribute to count the number of iteration (for performance measurements).
+	 */
+	private int iterationTopDownNaive;
+	
+	/**
 	 * We assume that constructor parameters are never null and well filled.
 	 * @param grammar
 	 * @param input
@@ -32,6 +49,8 @@ public class TopDown {
 		this.input = input;
 		// Table[n][n][r]
 		this.table = new Boolean[input.length()][input.length()][grammar.getGrammar().size()];
+		this.iterationTopDownMemoization = 0;
+		this.iterationTopDownNaive = 0;
 	}
 	
 	/**
@@ -42,17 +61,21 @@ public class TopDown {
 	 * @return boolean either true or false
 	 */
 	public boolean naive(String A, int i, int j) {
+		this.iterationTopDownNaive++;
+		
 		// This is the trivial case.
 		if(i==j) {
 			return isRule(A, String.valueOf(input.charAt(i)));
 		}
 		
 		// For every partition
-		for(int k = i; k < j - 1; k++) {
+		for(int k = i; k <= j - 1; k++) {
 			// For all the rule
 			for(String nt : this.grammar.getGrammar().get(A)) {
-				if(naive(nt.substring(0, 1), i, k) && naive(nt.substring(1, 2), k + 1, j)) {
-					return true;
+				if(nt.length() == 2) {
+					if(naive(nt.substring(0, 1), i, k) && naive(nt.substring(1, 2), k + 1, j)) {
+						return true;
+					}
 				}
 			}
 		}
@@ -81,13 +104,76 @@ public class TopDown {
 				}
 		    }
 		}
+		return false;
+	}
+	
+	
+	/**
+	 * This is the CKY algorithm in top down version with memoization. We use a table to store the computed results. 
+	 * We check whether the result has been already computer inside the table. 
+	 * If not we compute it and then store it.
+	 * @param A
+	 * @param i
+	 * @param j
+	 * @return boolean 
+	 */
+	public boolean memoization(String A, int i, int j) {
+		this.iterationTopDownMemoization++;
 		
+		// Check in the table
+		Boolean tmp = table[i][j][getKeyIndex(A)];
+		if(tmp != null) {
+			return tmp; // Return the already computed result.
+		}
+		
+		// This is the trivial case.
+		if(i==j) {
+			Boolean isRule = isRule(A, String.valueOf(input.charAt(i)));
+			table[i][j][getKeyIndex(A)] = isRule; // We store the computed result
+			return isRule;
+		}
+		
+		// For every partition
+		for(int k = i; k <= j - 1; k++) {
+			// For all the rule
+			for(String nt : this.grammar.getGrammar().get(A)) {
+				if(nt.length() == 2) {
+					if(naive(nt.substring(0, 1), i, k) && naive(nt.substring(1, 2), k + 1, j)) {
+						table[i][j][getKeyIndex(A)] = true;
+						return true;
+					}
+				}
+			}
+		}
+		
+		// No rule
+		this.table[i][j][getKeyIndex(A)] = false;
 		return false;
 	}
 	
-	
-	
-	public boolean memoization() {
-		return false;
+	/**
+	 * This function search the position corresponding to the given parameter.
+	 * @param A
+	 * @return int
+	 */
+	private int getKeyIndex(String A) {
+		List<String> indexes = new ArrayList<String>(this.grammar.getGrammar().keySet()); // <== Set the keySet to List
+		
+		return indexes.indexOf(A);
 	}
+
+	/**
+	 * @return the iterationTopDownMemoization
+	 */
+	public int getIterationTopDownMemoization() {
+		return iterationTopDownMemoization;
+	}
+
+	/**
+	 * @return the iterationTopDownNaive
+	 */
+	public int getIterationTopDownNaive() {
+		return iterationTopDownNaive;
+	}
+	
 }

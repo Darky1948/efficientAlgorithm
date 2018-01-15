@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author Kristen VIGUIER
+ *
+ */
 public class Grammar {
 	
 	/**
