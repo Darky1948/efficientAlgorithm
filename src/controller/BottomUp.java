@@ -69,8 +69,8 @@ public class BottomUp {
 		
 		/*
 		 * The second step is :
-		 * The first layer is for words of size 1. It means that it is for symbols (terminals). 
-		 * We store true in the cell table[i][i][A] if there is a rule Na-> input[i].
+		 *  The first layer is for words of size 1. It means that it is for symbols (terminals). 
+		 *  We store true in the cell table[i][i][A] if there is a rule Na-> input[i].
 		 */
 		for (int i = 0; i < n; i++) {
 			// For all rules Na -> input[i][i] do
@@ -81,7 +81,7 @@ public class BottomUp {
 		    	for (String a : values) {
 					// if a == input[i]
 		    		if(a.length() == 1 && a.equals(String.valueOf(this.input.charAt(i)))) {
-		    			this.table[i][0][getKeyIndex(key)] = true;
+		    			this.table[i][i][getKeyIndex(key)] = true;
 		    		}
 				}
 			}
@@ -90,9 +90,9 @@ public class BottomUp {
 		// The length of the sub-string
 		for (int l = 1; l < n; l++) {
 			// Start index
-			for (int i = 0; i < n - l; i++) {
+			for (int i = 0; i < n - l + 1; i++) {
 				// Partitions loop 
-				for (int k = 0; k < l; k++) {
+				for (int k = i; k < i + l - 2; k++) {
 					// for all production Na->Nb Nc
 					for (Map.Entry<String, ArrayList<String>> entry : this.grammar.getGrammar().entrySet()) {
 					    String key = entry.getKey();
@@ -100,8 +100,8 @@ public class BottomUp {
 					    
 					    for (String nt : values) {
 					    	if(nt.length() == 2) {
-								if(this.table[i][k][getKeyIndex(nt.substring(0, 1))] && this.table[i + k + 1][l - k - 1][getKeyIndex(nt.substring(1, 2))]) {
-									this.table[i][l][getKeyIndex(key)] = true;
+								if(this.table[i][k][getKeyIndex(nt.substring(0, 1))] && this.table[k + 1][i + l - 1][getKeyIndex(nt.substring(1, 2))]) {
+									this.table[i][i + l - 1][getKeyIndex(key)] = true;
 								}
 							}
 					    	this.iterationBottomUp++;
