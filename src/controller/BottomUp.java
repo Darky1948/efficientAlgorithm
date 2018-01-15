@@ -53,20 +53,26 @@ public class BottomUp {
 	 * @return boolean
 	 */
 	public boolean cky() {
-		// We first set all the cell of the table to false.
-		for (int i = 0; i < table.length; i++) {
-			for(int j = i; j < table.length; j++) {
-				for(int k = 1; k < grammar.getGrammar().size(); k++) {
+		// input string containing n chartacters
+		int n = this.input.length();
+		// Grammar contains R non terminal symbols
+		int r = this.grammar.getGrammar().size();
+		
+		// First step is to initialize all elements of table to false.
+		for (int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				for(int k = 0; k < r; k++) {
 					this.table[i][j][k] = false;
 				}
 			}
 		}
 		
 		/*
-		 *  The first layer is for words of size 1. It means that it is for symbols (terminals). 
-		 *  We store true in the cell table[i][i][A] if there is a rule Na-> input[i].
+		 * The second step is :
+		 * The first layer is for words of size 1. It means that it is for symbols (terminals). 
+		 * We store true in the cell table[i][i][A] if there is a rule Na-> input[i].
 		 */
-		for (int i = 0; i < table.length; i++) {
+		for (int i = 0; i < n; i++) {
 			// For all rules Na -> input[i][i] do
 			for (Map.Entry<String, ArrayList<String>> entry : this.grammar.getGrammar().entrySet()) {
 			    String key = entry.getKey();
@@ -74,19 +80,19 @@ public class BottomUp {
 			    
 		    	for (String a : values) {
 					// if a == input[i]
-		    		if(a.length() == 1 && a.equals(this.input.substring(i, i))) {
-		    			this.table[i][i][getKeyIndex(key)] = true;
+		    		if(a.length() == 1 && a.equals(String.valueOf(this.input.charAt(i)))) {
+		    			this.table[i][0][getKeyIndex(key)] = true;
 		    		}
 				}
 			}
 		}
 		
 		// The length of the sub-string
-		for (int l = 2; l < table.length; l++) {
+		for (int l = 1; l < n; l++) {
 			// Start index
-			for (int i = 0; i <= table.length - l + 1; i++) {
+			for (int i = 0; i < n - l; i++) {
 				// Partitions loop 
-				for (int k = i; k <= i + l - 2; k++) {
+				for (int k = 0; k < l; k++) {
 					// for all production Na->Nb Nc
 					for (Map.Entry<String, ArrayList<String>> entry : this.grammar.getGrammar().entrySet()) {
 					    String key = entry.getKey();
@@ -94,17 +100,18 @@ public class BottomUp {
 					    
 					    for (String nt : values) {
 					    	if(nt.length() == 2) {
-								if(this.table[i][k][getKeyIndex(nt.substring(0, 1))] && this.table[i][k][getKeyIndex(nt.substring(1, 2))]) {
-									this.table[i][i + l - 1][getKeyIndex(key)] = true;
+								if(this.table[i][k][getKeyIndex(nt.substring(0, 1))] && this.table[i + k + 1][l - k - 1][getKeyIndex(nt.substring(1, 2))]) {
+									this.table[i][l][getKeyIndex(key)] = true;
 								}
 							}
+					    	this.iterationBottomUp++;
 						}
 					}
 				}
 			}
 		}
 		
-		return this.table[1][this.table.length][this.grammar.getGrammar().size()];
+		return this.table[0][n-1][r-1];
 	}
 	
 	/**

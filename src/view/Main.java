@@ -3,6 +3,7 @@ package view;
 import java.util.ArrayList;
 import java.util.Map;
 
+import controller.BottomUp;
 import controller.TopDown;
 import model.Grammar;
 import utils.ReadFile;
@@ -48,7 +49,7 @@ public class Main {
 	/**
 	 * Word to test for language3.
 	 */
-	private static final String WORD_LANGUAGE_3 = "babababababababababaabaab";
+	private static final String WORD_LANGUAGE_3 = "babaab";
 	
 	/**
 	 * Path to load language4.
@@ -69,7 +70,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		ReadFile readFile = new ReadFile();
-		readFile.readFile(LANGUAGE_3);
+		readFile.readFile(GRAMMAR);
 
 		Map<String, ArrayList<String>> map = readFile.getRulesMap();
 
@@ -81,13 +82,15 @@ public class Main {
 		System.out.println(grammar.toString());
 
 		// TopDown CKY Version
-		TopDown topDown = new TopDown(grammar, WORD_LANGUAGE_3);
+		TopDown topDown = new TopDown(grammar, INPUT);
 		
-		System.out.println(topDown.naive("S", 0, WORD_LANGUAGE_3.length()-1) + " number of iterations " + topDown.getIterationTopDownNaive());
-		System.out.println(topDown.memoization("S", 0, WORD_LANGUAGE_3.length()-1) + " number of iterations " + topDown.getIterationTopDownMemoization());
+		System.out.println(topDown.naive("S", 0, INPUT.length()-1) + " number of iterations " + topDown.getIterationTopDownNaive());
+		System.out.println(topDown.memoization("S", 0, INPUT.length()-1) + " number of iterations " + topDown.getIterationTopDownMemoization());
 		
 		// Bottom up CKY
+		BottomUp bottomUp = new BottomUp(grammar, INPUT);
 		
+		System.out.println(bottomUp.cky() + " number of iterations " + bottomUp.getIterationBottomUp());
 	}
 
 }
