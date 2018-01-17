@@ -28,7 +28,7 @@ public class BottomUp {
 	/**
 	 * Table use for the memoization part of the TopDown. We store the computed previous results.
 	 */
-	private Boolean table[][][];
+	private boolean table[][][];
 	
 	/**
 	 * This is an attribute to count the number of iteration (for performance measurements).
@@ -44,7 +44,7 @@ public class BottomUp {
 		this.grammar = grammar;
 		this.input = input;
 		// Table[n][n][r]
-		this.table = new Boolean[input.length()][input.length()][grammar.getGrammar().size()];
+		this.table = new boolean[input.length()][input.length()][grammar.getGrammar().size()];
 		this.iterationBottomUp = 0;
 	}
 	
@@ -92,7 +92,7 @@ public class BottomUp {
 			// Start index
 			for (int i = 0; i < n - l + 1; i++) {
 				// Partitions loop 
-				for (int k = i; k < i + l - 2; k++) {
+				for (int k = i; k <= i + l - 2; k++) {
 					// for all production Na->Nb Nc
 					for (Map.Entry<String, ArrayList<String>> entry : this.grammar.getGrammar().entrySet()) {
 					    String key = entry.getKey();
@@ -110,8 +110,27 @@ public class BottomUp {
 				}
 			}
 		}
+// Uncomment to display the table		
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				System.out.print("{");
+				for (int m = 0; m < r; m++) {
+					if (this.table[i][j][m]) {
+						List<String> indexes = new ArrayList<String>(this.grammar.getGrammar().keySet());
+						System.out.print(indexes.get(m));
+					}
+				}
+				System.out.print("} \t");
+			}
+			System.out.println("");
+		}
 		
-		return this.table[0][n-1][r-1];
+		if(this.table[0][n-1][getKeyIndex(this.grammar.getStartSymbol())]) {
+			return true;
+		}
+		
+		
+		return false;
 	}
 	
 	/**

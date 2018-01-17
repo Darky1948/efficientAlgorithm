@@ -14,7 +14,14 @@ import utils.ReadFile;
  *
  */
 public class Main {
-
+	/**
+	 * Path to load grammar.
+	 */
+	private static final String GRAMMAR = "D:\\WORK\\Developpement\\java_ws\\efficientAlgorithm\\resources\\grammar.txt";
+	/**
+	 * Word to test for grammar.
+	 */
+	private static final String[] INPUT = {"baaba", "baabaaba", "baabaabaabaaba"}; 
 	/**
 	 * Path to load language1.
 	 */
@@ -60,10 +67,11 @@ public class Main {
 	private static final String INPUT4 = "ababca";
 
 	public static void main(String[] args) {
-		language1(LANGUAGE_1);
+		//testLanguage(GRAMMAR, INPUT, "S");
+		testLanguage(LANGUAGE_1, WORD_LANGUAGE_1, "S");
 	}
 	
-	private static void language1(String path) {
+	private static void testLanguage(String path, String[] input, String startSymbol) {
 		ReadFile readFile = new ReadFile();
 		readFile.readFile(path);
 
@@ -71,23 +79,24 @@ public class Main {
 
 		// Define the grammar
 		Grammar grammar = new Grammar();
-		grammar.setStartSymbol("S");
+		grammar.setStartSymbol(startSymbol);
 		grammar.setGrammar(map);
 		
 		System.out.println(grammar.toString());
 		
-	//	for (int i = 0; i < WORD_LANGUAGE_1.length; i++) {
+		for (int i = 0; i < input.length; i++) {
+			System.out.println("Word processed : " + input[i]);
 			// TopDown CKY Version
-			TopDown topDown = new TopDown(grammar, WORD_LANGUAGE_1[1]);
+			TopDown topDown = new TopDown(grammar, input[i]);
 			
-			System.out.println(topDown.naive("S", 0, WORD_LANGUAGE_1[1].length()-1) + " number of iterations " + topDown.getIterationTopDownNaive());
-			System.out.println(topDown.memoization("S", 0, WORD_LANGUAGE_1[1].length()-1) + " number of iterations " + topDown.getIterationTopDownMemoization());
+			System.out.println(topDown.naive(grammar.getStartSymbol(), 0, input[i].length()-1) + " number of iterations " + topDown.getIterationTopDownNaive());
+			System.out.println(topDown.memoization(grammar.getStartSymbol(), 0, input[i].length()-1) + " number of iterations " + topDown.getIterationTopDownMemoization());
 			
 			// Bottom up CKY
-			BottomUp bottomUp = new BottomUp(grammar, WORD_LANGUAGE_1[1]);
+			BottomUp bottomUp = new BottomUp(grammar, input[i]);
 			
-			System.out.println(bottomUp.cky() + " number of iterations " + bottomUp.getIterationBottomUp());
-		//}
+			System.out.println(bottomUp.cky() + " number of iterations " + bottomUp.getIterationBottomUp() + "\n");
+		}
 		
 	}
 
