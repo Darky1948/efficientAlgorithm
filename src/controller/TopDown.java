@@ -138,7 +138,7 @@ public class TopDown {
 			// For all the rule
 			for(String nt : this.grammar.getGrammar().get(A)) {
 				if(nt.length() == 2) {
-					if(naive(nt.substring(0, 1), i, k) && naive(nt.substring(1, 2), k + 1, j)) {
+					if(memoization(nt.substring(0, 1), i, k) && memoization(nt.substring(1, 2), k + 1, j)) {
 						table[i][j][getKeyIndex(A)] = true;
 						return true;
 					}
