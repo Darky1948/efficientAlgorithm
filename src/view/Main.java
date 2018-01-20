@@ -47,7 +47,7 @@ public class Main {
 	/**
 	 * Word to test for language3.
 	 */
-	private static final String[] WORD_LANGUAGE_3 = {"babaab"};
+	private static final String[] WORD_LANGUAGE_3 = {"baab", "babaab", "bababababababaab", "bababababababaaaab"};
 	
 	/**
 	 * Path to load language4.
@@ -56,7 +56,7 @@ public class Main {
 	/**
 	 * Word to test for language4.
 	 */
-	private static final String WORD_LANGUAGE_4 = "ba";
+	private static final String[] WORD_LANGUAGE_4 = {"ba", "ba", "baaaaaaaaaaaaaaaaa", "abbbbbbbbbbbbbbbbbbbbbbb"};
 	/**
 	 * Path to load grammar.
 	 */
@@ -64,12 +64,15 @@ public class Main {
 	/**
 	 * Word to test for grammar.
 	 */
-	private static final String INPUT4 = "ababca";
+	private static final String[] INPUT4 = {"ababaaabc"};
 
 	public static void main(String[] args) {
 		//testLanguage(GRAMMAR, INPUT, "S");
-//		testLanguage(LANGUAGE_1, WORD_LANGUAGE_1, "S");
-		testLanguage(LANGUAGE_2, WORD_LANGUAGE_2, "R");
+		testLanguage(LANGUAGE_1, WORD_LANGUAGE_1, "S");
+//		testLanguage(LANGUAGE_2, WORD_LANGUAGE_2, "R");
+//		testLanguage(LANGUAGE_3, WORD_LANGUAGE_3, "S");
+//		testLanguage(LANGUAGE_4, WORD_LANGUAGE_4, "S");
+//		testLanguage(ASSIGNMENT4, INPUT4, "S");
 	}
 	
 	private static void testLanguage(String path, String[] input, String startSymbol) {
@@ -90,13 +93,26 @@ public class Main {
 			// TopDown CKY Version
 			TopDown topDown = new TopDown(grammar, input[i]);
 			
-			System.out.println(topDown.naive(grammar.getStartSymbol(), 0, input[i].length()-1) + " number of iterations " + topDown.getIterationTopDownNaive());
-			System.out.println(topDown.memoization(grammar.getStartSymbol(), 0, input[i].length()-1) + " number of iterations " + topDown.getIterationTopDownMemoization());
+			long startTime = System.nanoTime();
+			boolean naive = topDown.naive(grammar.getStartSymbol(), 0, input[i].length()-1);
+			long stopTime = System.nanoTime();
+			
+			System.out.println(naive + " number of iterations " + topDown.getIterationTopDownNaive() + " executed in " + (stopTime - startTime) + " ns");
+			
+			startTime = System.nanoTime();
+			boolean memoization = topDown.memoization(grammar.getStartSymbol(), 0, input[i].length()-1);
+			stopTime = System.nanoTime();
+			
+			System.out.println(memoization + " number of iterations " + topDown.getIterationTopDownMemoization() + " executed in " + (stopTime - startTime) + " ns");
 			
 			// Bottom up CKY
 			BottomUp bottomUp = new BottomUp(grammar, input[i]);
 			
-			System.out.println(bottomUp.cky() + " number of iterations " + bottomUp.getIterationBottomUp() + "\n");
+			startTime = System.nanoTime();
+			boolean bottom = bottomUp.cky();
+			stopTime = System.nanoTime();
+			
+			System.out.println(bottom + " number of iterations " + bottomUp.getIterationBottomUp() + " executed in " + (stopTime - startTime) + " ns" + "\n");
 		}
 		
 	}
