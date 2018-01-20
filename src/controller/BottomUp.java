@@ -88,7 +88,7 @@ public class BottomUp {
 		}
 		
 		// The length of the sub-string
-		for (int l = 1; l < n; l++) {
+		for (int l = 2; l <= n; l++) {
 			// Start index
 			for (int i = 0; i < n - l + 1; i++) {
 				// Partitions loop 
@@ -111,19 +111,19 @@ public class BottomUp {
 			}
 		}
 // Uncomment to display the table		
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				System.out.print("{");
-				for (int m = 0; m < r; m++) {
-					if (this.table[i][j][m]) {
-						List<String> indexes = new ArrayList<String>(this.grammar.getGrammar().keySet());
-						System.out.print(indexes.get(m));
-					}
-				}
-				System.out.print("} \t");
-			}
-			System.out.println("");
-		}
+//		for (int i = 0; i < n; i++) {
+//			for (int j = 0; j < n; j++) {
+//				System.out.print("{");
+//				for (int m = 0; m < r; m++) {
+//					if (this.table[i][j][m]) {
+//						List<String> indexes = new ArrayList<String>(this.grammar.getGrammar().keySet());
+//						System.out.print(indexes.get(m));
+//					}
+//				}
+//				System.out.print("} \t");
+//			}
+//			System.out.println("");
+//		}
 		
 		if(this.table[0][n-1][getKeyIndex(this.grammar.getStartSymbol())]) {
 			return true;

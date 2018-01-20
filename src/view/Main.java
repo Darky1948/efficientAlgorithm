@@ -29,7 +29,7 @@ public class Main {
 	/**
 	 * Word to test for language1.
 	 */
-	private static final String[] WORD_LANGUAGE_1 = {"()()", "((())(()))", "((()())())(())"};
+	private static final String[] WORD_LANGUAGE_1 = {"()()", "((())(()))", "((()())())(())", "()())"};
 	
 	/**
 	 * Path to load language2.
@@ -38,7 +38,7 @@ public class Main {
 	/**
 	 * Word to test for language2.
 	 */
-	private static final String WORD_LANGUAGE_2 = "-10101.1e-101";
+	private static final String[] WORD_LANGUAGE_2 = {"-10101.1e-101", "+010101.1e-1011010", "+010101010101.10101e-101010101010", "-+010101.1e-1011010"};
 	
 	/**
 	 * Path to load language3.
@@ -47,7 +47,7 @@ public class Main {
 	/**
 	 * Word to test for language3.
 	 */
-	private static final String WORD_LANGUAGE_3 = "babaab";
+	private static final String[] WORD_LANGUAGE_3 = {"babaab"};
 	
 	/**
 	 * Path to load language4.
@@ -68,7 +68,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		//testLanguage(GRAMMAR, INPUT, "S");
-		testLanguage(LANGUAGE_1, WORD_LANGUAGE_1, "S");
+//		testLanguage(LANGUAGE_1, WORD_LANGUAGE_1, "S");
+		testLanguage(LANGUAGE_2, WORD_LANGUAGE_2, "R");
 	}
 	
 	private static void testLanguage(String path, String[] input, String startSymbol) {
