@@ -6,6 +6,8 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import model.Grammar;
 
@@ -35,6 +37,8 @@ public class BottomUp {
 	 */
 	private int iterationBottomUp;
 	
+	private List<String> indexes;
+	
 	/**
 	 * We assume that constructor parameters are never null and well filled.
 	 * @param grammar
@@ -46,6 +50,7 @@ public class BottomUp {
 		// Table[n][n][r]
 		this.table = new boolean[input.length()][input.length()][grammar.getGrammar().size()];
 		this.iterationBottomUp = 0;
+		this.indexes = new ArrayList<String>(this.grammar.getGrammar().keySet());
 	}
 	
 	/**
@@ -67,6 +72,7 @@ public class BottomUp {
 			}
 		}
 		
+		Set<Entry<String, ArrayList<String>>> entryset = this.grammar.getGrammar().entrySet();
 		/*
 		 * The second step is :
 		 *  The first layer is for words of size 1. It means that it is for symbols (terminals). 
@@ -74,7 +80,7 @@ public class BottomUp {
 		 */
 		for (int i = 0; i < n; i++) {
 			// For all rules Na -> input[i][i] do
-			for (Map.Entry<String, ArrayList<String>> entry : this.grammar.getGrammar().entrySet()) {
+			for (Entry<String, ArrayList<String>> entry : entryset) {
 			    String key = entry.getKey();
 			    ArrayList<String> values = entry.getValue();
 			    
@@ -94,7 +100,7 @@ public class BottomUp {
 				// Partitions loop 
 				for (int k = i; k <= i + l - 2; k++) {
 					// for all production Na->Nb Nc
-					for (Map.Entry<String, ArrayList<String>> entry : this.grammar.getGrammar().entrySet()) {
+					for (Entry<String, ArrayList<String>> entry : entryset) {
 					    String key = entry.getKey();
 					    ArrayList<String> values = entry.getValue();
 					    
@@ -110,20 +116,6 @@ public class BottomUp {
 				}
 			}
 		}
-// Uncomment to display the table		
-//		for (int i = 0; i < n; i++) {
-//			for (int j = 0; j < n; j++) {
-//				System.out.print("{");
-//				for (int m = 0; m < r; m++) {
-//					if (this.table[i][j][m]) {
-//						List<String> indexes = new ArrayList<String>(this.grammar.getGrammar().keySet());
-//						System.out.print(indexes.get(m));
-//					}
-//				}
-//				System.out.print("} \t");
-//			}
-//			System.out.println("");
-//		}
 		
 		if(this.table[0][n-1][getKeyIndex(this.grammar.getStartSymbol())]) {
 			return true;
@@ -132,16 +124,27 @@ public class BottomUp {
 		
 		return false;
 	}
-	
+	// Uncomment to display the table		
+//	for (int i = 0; i < n; i++) {
+//		for (int j = 0; j < n; j++) {
+//			System.out.print("{");
+//			for (int m = 0; m < r; m++) {
+//				if (this.table[i][j][m]) {
+//					List<String> indexes = new ArrayList<String>(this.grammar.getGrammar().keySet());
+//					System.out.print(indexes.get(m));
+//				}
+//			}
+//			System.out.print("} \t");
+//		}
+//		System.out.println("");
+//	}
 	/**
 	 * This function search the position corresponding to the given parameter.
 	 * @param A
 	 * @return int
 	 */
 	private int getKeyIndex(String A) {
-		List<String> indexes = new ArrayList<String>(this.grammar.getGrammar().keySet()); // <== Set the keySet to List
-		
-		return indexes.indexOf(A);
+		return this.indexes.indexOf(A);
 	}
 
 	/**
@@ -149,6 +152,13 @@ public class BottomUp {
 	 */
 	public int getIterationBottomUp() {
 		return iterationBottomUp;
+	}
+
+	/**
+	 * @param iterationBottomUp the iterationBottomUp to set
+	 */
+	public void setIterationBottomUp(int iterationBottomUp) {
+		this.iterationBottomUp = iterationBottomUp;
 	}
 	
 }

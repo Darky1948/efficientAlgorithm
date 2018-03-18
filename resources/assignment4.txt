@@ -1,8 +1,8 @@
 S A C
 C c
 S b
-A VS
+A V S
 V a
-A VB
-B XS
+A V B
+B X S
 X b

@@ -175,5 +175,19 @@ public class TopDown {
 	public int getIterationTopDownNaive() {
 		return iterationTopDownNaive;
 	}
+
+	/**
+	 * @param iterationTopDownMemoization the iterationTopDownMemoization to set
+	 */
+	public void setIterationTopDownMemoization(int iterationTopDownMemoization) {
+		this.iterationTopDownMemoization = iterationTopDownMemoization;
+	}
+
+	/**
+	 * @param iterationTopDownNaive the iterationTopDownNaive to set
+	 */
+	public void setIterationTopDownNaive(int iterationTopDownNaive) {
+		this.iterationTopDownNaive = iterationTopDownNaive;
+	}
 	
 }
