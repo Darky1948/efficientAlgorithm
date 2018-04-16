@@ -3,6 +3,8 @@ package view;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.sun.javafx.css.CalculatedValue;
+
 import controller.BottomUp;
 import controller.TopDown;
 import model.Grammar;
@@ -78,28 +80,15 @@ public class Main {
 
 		// evolutionIterationParTemps();
 
-//		tailleMotParTemps();
-		
-		locationErreur();
-		
-		//testLanguage3TopDownMemoization();
-		
-//		testLanguage1TopDownNaive();
-		
-		/*
-		 * Comparaison des règles pour des mots de même longueurs
-		 */
-		// nombreRegles(LANGUAGE_1,
-		// "((()())())(())(())()((()())())(())(())()((()())())(())", "S");
-		// nombreRegles(LANGUAGE_2,
-		// "+010101010101010101010101.1010101010101010101010101e-1010101010100101010101010101010101010101010101",
-		// "R");
-		// nombreRegles(LANGUAGE_3,
-		// "bababababababababababababababababababababababababababababababababababababababababababababababababababaab",
-		// "S");
-		// nombreRegles(LANGUAGE_4,
-		// "baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-		// "S");
+		tailleMotParTemps();
+		// generateAssignment4();
+		// generateLanguage3();
+		// locationErreur();
+
+		// testLanguage3TopDownMemoization();
+
+		// testLanguage1TopDownNaive();
+
 	}
 
 	private static void testLanguage1TopDownNaive() {
@@ -113,22 +102,23 @@ public class Main {
 		grammar.setStartSymbol("S");
 		grammar.setGrammar(map);
 
-		String input[] = { "()()", "((())(()))", "((()())())(())", "((()())(()(()(()))))", "(())(())()(((())(()))(()(()(()))()))" };
+		String input[] = { "()()", "((())(()))", "((()())())(())", "((()())(()(()(()))))",
+				"(())(())()(((())(()))(()(()(()))()))" };
 
 		for (int i = 0; i < input.length; i++) {
 			System.out.println("Word processed : " + input[i] + " de taille " + input[i].length());
 
 			// TopDown CKY Version
 			TopDown topDown = new TopDown(grammar, input[i]);
-			
+
 			topDown.setIterationTopDownNaive(0);
 
 			long startTime = System.nanoTime();
 			boolean naive = topDown.naive(grammar.getStartSymbol(), 0, input[i].length() - 1);
 			long stopTime = System.nanoTime();
 
-			System.out.println(naive + " number of iterations " + topDown.getIterationTopDownNaive()
-					+ " executed in " + (stopTime - startTime) / 100000 + " ms");
+			System.out.println(naive + " number of iterations " + topDown.getIterationTopDownNaive() + " executed in "
+					+ (stopTime - startTime) / 100000 + " ms");
 		}
 		System.out.println("last");
 	}
@@ -163,7 +153,7 @@ public class Main {
 
 			System.out.println(memoization + " number of iterations " + topDown.getIterationTopDownMemoization()
 					+ " executed in " + (stopTime - startTime) + " ns");
-			
+
 			startTime = System.nanoTime();
 			boolean bottom = bottomUp.cky();
 			stopTime = System.nanoTime();
@@ -172,7 +162,7 @@ public class Main {
 					+ (stopTime - startTime) + " ns");
 
 		}
-		
+
 	}
 
 	private static void evolutionIterationParTemps() {
@@ -228,7 +218,7 @@ public class Main {
 
 	private static void tailleMotParTemps() {
 		ReadFile readFile = new ReadFile();
-		readFile.readFile(LANGUAGE_1);
+		readFile.readFile(ASSIGNMENT4);
 
 		Map<String, ArrayList<String>> map = readFile.getRulesMap();
 
@@ -237,39 +227,104 @@ public class Main {
 		grammar.setStartSymbol("S");
 		grammar.setGrammar(map);
 
-		String input[] = { "(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())"
+		String inputLanguage2[] = { "-10101.1e-101+",
+				"+010101010101.10101e-10101010+",
+				"+010101010101.101010101e-1010101010100101010101010101010101+",
+				"+010101010101010101010101.1010101010101010101010101e-101010101010010101010101010101010101+",
+				"+010101010101010101010101.10101010101010101010101010101010101e-10101010101001010101010101010101010101010101010101010101+",
+				"+010101010101010101010101.1010101010101010101010101e-101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010+",
+				"+010101010101010101010101.1010101010101010101010101e-1010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010101010101010101010101010101010+",
+				"+010101010101010101010101.1010101010101010101010101e-101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101010101010101010101010101010101001010101010100101010101010+",
+				"+010101010101010101010101.1010101010101010101010101e-1010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010101010101010101010101010101010010101010101001010101010100101010010101010101001010100101010101010+",
+				"+010101010101010101010101.1010101010101010101010101e-1010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010101010101010101010101010101010010101010101001010101010100101010010101010101001010100101010101010010101001010101010100101010010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-10101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-1010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-10101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-1010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-10101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010010101010010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-1010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-10101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010010101010010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-1010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010010101001010101010101+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101001010100101010101010101010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-10101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010100101010010101010101010101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-1010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010010101001010101010101010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101001010100101010101010101010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-10101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010100101010010101010101010101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-1010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010010101001010101010101010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101001010100101010101010101010101010010101010010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-10101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010100101010010101010101010101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-1010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010010101001010101010101010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+",
+				"+010101010101010101010101010101010101010101010101.10101010101010101010101011010101010101010101010101e-101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101010101010101001010101010101010101010101010101010101010101010010101010101010101010101010101010101010101010100101010101010101010101010101010101001010100101010101010101010101010010101010010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010010101010100101010100101010101001010101001010101010010101010+"
+
+				
 		};
 
-		for (int i = 0; i < input.length; i++) {
-			System.out.println("Word processed size of : " + input[i].length());
-
+		System.out.println("Language 2");
+		for (int i = 0; i < inputLanguage2.length; i++) {
 			// TopDown CKY Version
-			TopDown topDown = new TopDown(grammar, input[i]);
-			// Bottom up CKY
-			BottomUp bottomUp = new BottomUp(grammar, input[i]);
+			TopDown topDown = new TopDown(grammar, inputLanguage2[i]);
 
 			topDown.setIterationTopDownMemoization(0);
-			// topDown.setIterationTopDownNaive(0);
-			bottomUp.setIterationBottomUp(0);
 
 			long startTime = System.nanoTime();
-			boolean memoization = topDown.memoization(grammar.getStartSymbol(), 0, input[i].length() - 1);
+			boolean topDownA = topDown.memoization(grammar.getStartSymbol(), 0, inputLanguage2[i].length() - 1);
 			long stopTime = System.nanoTime();
 
-			System.out.println("Top-down : " + memoization + " number of iterations "
-					+ topDown.getIterationTopDownMemoization() + " executed in " + (stopTime - startTime)  / 1000000 + " ms");
+			System.out.print((stopTime - startTime) / 1000000 + ";");
+		}
 
-			startTime = System.nanoTime();
-			boolean bottom = bottomUp.cky();
-			stopTime = System.nanoTime();
+		System.out.println("\n-----------------------------------------------------------------\n");
+		System.out.println("Assignment 4");
 
-			System.out.println("Bottom-up : " + bottom + " number of iterations " + bottomUp.getIterationBottomUp()
-					+ " executed in " + (stopTime - startTime) / 1000000 + " ms \n");
+		String inputAssignment4[] = { "aaaaaaabccccccc", "aaaaaaaaaaaaaabcccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+				"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", };
 
+		for (int i = 0; i < inputAssignment4.length; i++) {
+			// TopDown CKY Version
+			TopDown topDown = new TopDown(grammar, inputAssignment4[i]);
+
+			topDown.setIterationTopDownMemoization(0);
+
+			long startTime = System.nanoTime();
+			boolean topDownA = topDown.memoization(grammar.getStartSymbol(), 0, inputAssignment4[i].length() - 1);
+			long stopTime = System.nanoTime();
+
+			System.out.print((stopTime - startTime) / 1000000 + ";");
 		}
 
 	}
-	
+
 	private static void locationErreur() {
 		ReadFile readFile = new ReadFile();
 		readFile.readFile(LANGUAGE_1);
@@ -281,8 +336,10 @@ public class Main {
 		grammar.setStartSymbol("S");
 		grammar.setGrammar(map);
 
-//		String input[] = getLocationErreurAray("(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())");
-		String input[] = getLocationErreurAray("()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()");
+		// String input[] =
+		// getLocationErreurAray("(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())(())");
+		String input[] = getLocationErreurAray(
+				"()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()");
 		String resultat = "";
 		double computation = 0d;
 		for (int i = 0; i < input.length; i++) {
@@ -291,39 +348,41 @@ public class Main {
 				// TopDown CKY Version
 				TopDown topDown = new TopDown(grammar, input[i]);
 				topDown.setIterationTopDownMemoization(0);
-	
+
 				long startTime = System.nanoTime();
 				boolean memoization = topDown.memoization(grammar.getStartSymbol(), 0, input[i].length() - 1);
 				long stopTime = System.nanoTime();
-				
-				computation += (stopTime - startTime)  / 1000000;
+
+				computation += (stopTime - startTime) / 1000000;
 			}
 			resultat += computation / 50 + ";";
 		}
 		System.out.println(resultat);
 
 	}
-	
+
 	/**
-	 * Rajoute une parenthèse pour mettre le mot en erreur et déplacer le caractère mauvais jusqu'à la fin.
+	 * Rajoute une parenthèse pour mettre le mot en erreur et déplacer le caractère
+	 * mauvais jusqu'à la fin.
+	 * 
 	 * @param origine
 	 * @return String []
 	 */
 	private static String[] getLocationErreurAray(String origine) {
 		String[] input = new String[100];
 		StringBuilder tmp;
-		
+
 		for (int i = 0; i < input.length; i++) {
 			tmp = new StringBuilder(origine);
-				
-			if(origine.charAt(i) == '(') {
+
+			if (origine.charAt(i) == '(') {
 				tmp.setCharAt(i, ')');
 			} else {
 				tmp.setCharAt(i, '(');
 			}
 			input[i] = tmp.toString();
 		}
-		
+
 		return input;
 	}
 
@@ -419,6 +478,46 @@ public class Main {
 					+ (stopTime - startTime) + " ns" + "\n");
 		}
 
+	}
+
+	/**
+	 * Genere des inputs language assignment 3
+	 * 
+	 * @return {@link ArrayList}
+	 * 
+	 */
+	private static void generateAssignment4() {
+		String base = "b";
+		ArrayList<String> liste = new ArrayList<>();
+
+		int[] longueurs = { 14, 29, 59, 89, 119, 149, 189, 215, 255, 285, 299, 319, 339, 359, 379, 399, 419, 439, 459,
+				479, 499, 519, 539, 559, 579, 599, 619, 639, 659, 679, 699 };
+
+		for (int i = 0; i < longueurs.length; i++) {
+			StringBuilder calcul = new StringBuilder(base);
+			while (calcul.length() < longueurs[i]) {
+				calcul.insert(0, "a");
+				calcul.append("c");
+			}
+			System.out.println(calcul.toString());
+		}
+	}
+
+	private static void generateLanguage3() {
+		String base = "ab";
+
+		ArrayList<String> liste = new ArrayList<>();
+
+		int[] longueurs = { 14, 29, 59, 89, 119, 149, 189, 215, 255, 285, 299, 319, 339, 359, 379, 399, 419, 439, 459,
+				479, 499, 519, 539, 559, 579, 599, 619, 639, 659, 679, 699 };
+
+		for (int i = 0; i < longueurs.length; i++) {
+			StringBuilder calcul = new StringBuilder(base);
+			while (calcul.length() < longueurs[i]) {
+				calcul.insert(0, "ba");
+			}
+			System.out.println("\"" + calcul.toString() + "\",");
+		}
 	}
 
 }
